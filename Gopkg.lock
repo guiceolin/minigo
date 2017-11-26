@@ -20,6 +20,12 @@
   revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
 
 [[projects]]
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
+  version = "v1.2.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/lib/pq"
   packages = [".","hstore","oid"]
@@ -34,6 +40,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1765e94d5a86a7512670d005999488dea31493d6faa5f4a67adb8fc0fc73843e"
+  inputs-digest = "c5db681921bf7157a08f2c672558208892678dd3fa2fca25f5883c2298e0324c"
   solver-name = "gps-cdcl"
   solver-version = 1

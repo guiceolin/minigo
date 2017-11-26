@@ -1,19 +1,27 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/guiceolin/minigo/handlers"
 	"github.com/guiceolin/minigo/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"log"
-	"net/http"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	db, err := gorm.Open("postgres", "host=localhost user=postgres dbname=minigo sslmode=disable ")
-	//db, err := gorm.Open("postgres", "postgresql://postgres@localhost:5432/minigo")
+	envErr := godotenv.Load()
+	if envErr != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal("Failed to connect database")
 	}
