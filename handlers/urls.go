@@ -10,6 +10,12 @@ import (
 	"github.com/xor-gate/bjf"
 )
 
+func (e Env) findURL(shortID string) models.Url {
+	url := models.Url{}
+	e.DB.Find(&url, bjf.Decode(shortID))
+	return url
+}
+
 func (e Env) CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
 	original := r.FormValue("url")
 
@@ -27,9 +33,7 @@ func (e Env) NewURLHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e Env) UnshortURLHandler(w http.ResponseWriter, r *http.Request) {
-	shortURL := chi.URLParam(r, "short")
-	url := models.Url{}
-	e.DB.Find(&url, bjf.Decode(shortURL))
+	url := e.findURL(chi.URLParam(r, "short"))
 	url.Count++
 	e.DB.Save(&url)
 
