@@ -24,7 +24,7 @@ func (e Env) CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
 	e.DB.Create(&url)
 	var idToEncode = strconv.FormatUint(uint64(url.ID), 10)
 
-	http.Redirect(w, r, "/"+bjf.Encode(idToEncode), 302)
+	http.Redirect(w, r, "/"+bjf.Encode(idToEncode)+"/info", 302)
 }
 
 func (e Env) NewURLHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,4 +38,11 @@ func (e Env) UnshortURLHandler(w http.ResponseWriter, r *http.Request) {
 	e.DB.Save(&url)
 
 	http.Redirect(w, r, url.Original, 302)
+}
+
+func (e Env) ShortURLInfo(w http.ResponseWriter, r *http.Request) {
+	url := e.findURL(chi.URLParam(r, "short"))
+
+	tmpl := template.Must(template.ParseFiles("templates/url_info.html"))
+	tmpl.Execute(w, url)
 }
