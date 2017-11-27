@@ -11,8 +11,7 @@ import (
 )
 
 func (e Env) CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
-	queryValues := r.URL.Query()
-	original := queryValues.Get("url")
+	original := r.FormValue("url")
 
 	url := models.Url{Original: original, Count: 0}
 
