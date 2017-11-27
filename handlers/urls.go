@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"html/template"
 	"net/http"
 	"strconv"
 
@@ -19,6 +20,11 @@ func (e Env) CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
 	var idToEncode = strconv.FormatUint(uint64(url.ID), 10)
 
 	http.Redirect(w, r, "/"+bjf.Encode(idToEncode), 302)
+}
+
+func (e Env) NewURLHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/new_url.html"))
+	tmpl.Execute(w, nil)
 }
 
 func (e Env) UnshortURLHandler(w http.ResponseWriter, r *http.Request) {
