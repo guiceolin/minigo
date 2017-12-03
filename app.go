@@ -8,7 +8,9 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/guiceolin/minigo/handlers"
+	"github.com/guiceolin/minigo/interactors"
 	"github.com/guiceolin/minigo/models"
+	"github.com/guiceolin/minigo/repositories/postgres"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -32,6 +34,9 @@ func main() {
 		DB: db,
 	}
 
+	urlRepo := postgres.PostgresUrlRepository{DB: db}
+	urlInteractor := interactors.UrlInteractor{Repo: urlRepo}
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -40,7 +45,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 
 	r.Get("/", env.RootHandler)
-	r.Post("/urls", env.CreateUrlHandler)
+	r.Post("/urls", handlers.CreateUrlHandler(urlInteractor))
 	r.Get("/urls/new", env.NewURLHandler)
 	r.Get("/{short}", env.UnshortURLHandler)
 	r.Get("/{short}/info", env.ShortURLInfo)

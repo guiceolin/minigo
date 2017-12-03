@@ -3,9 +3,9 @@ package handlers
 import (
 	"html/template"
 	"net/http"
-	"strconv"
 
 	"github.com/go-chi/chi"
+	"github.com/guiceolin/minigo/interactors"
 	"github.com/guiceolin/minigo/models"
 	"github.com/xor-gate/bjf"
 )
@@ -14,17 +14,6 @@ func (e Env) findURL(shortID string) models.Url {
 	url := models.Url{}
 	e.DB.Find(&url, bjf.Decode(shortID))
 	return url
-}
-
-func (e Env) CreateUrlHandler(w http.ResponseWriter, r *http.Request) {
-	original := r.FormValue("url")
-
-	url := models.Url{Original: original, Count: 0}
-
-	e.DB.Create(&url)
-	var idToEncode = strconv.FormatUint(uint64(url.ID), 10)
-
-	http.Redirect(w, r, "/"+bjf.Encode(idToEncode)+"/info", 302)
 }
 
 func (e Env) NewURLHandler(w http.ResponseWriter, r *http.Request) {
@@ -45,4 +34,11 @@ func (e Env) ShortURLInfo(w http.ResponseWriter, r *http.Request) {
 
 	tmpl := template.Must(template.ParseFiles("templates/url_info.html"))
 	tmpl.Execute(w, url)
+}
+
+func CreateUrlHandler(i interactors.UrlInteractor) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		encoded := i.CreateUrl(r.FormValue("url"))
+		http.Redirect(w, r, "/"+encoded+"/info", 302)
+	}
 }
