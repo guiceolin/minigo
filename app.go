@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/guiceolin/minigo/handlers"
+	h "github.com/guiceolin/minigo/handlers"
 	"github.com/guiceolin/minigo/interactors"
 	"github.com/guiceolin/minigo/models"
 	"github.com/guiceolin/minigo/repositories/postgres"
@@ -30,10 +30,6 @@ func main() {
 
 	db.AutoMigrate(&models.Url{})
 
-	env := handlers.Env{
-		DB: db,
-	}
-
 	urlRepo := postgres.PostgresUrlRepository{DB: db}
 	urlInteractor := interactors.UrlInteractor{Repo: urlRepo}
 
@@ -44,11 +40,11 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/", env.RootHandler)
-	r.Post("/urls", handlers.CreateUrlHandler(urlInteractor))
-	r.Get("/urls/new", env.NewURLHandler)
-	r.Get("/{short}", handlers.UnshortURLHandler(urlInteractor))
-	r.Get("/{short}/info", handlers.GetShortURLInfo(urlInteractor))
+	r.Get("/", h.RootHandler())
+	r.Post("/urls", h.CreateUrlHandler(urlInteractor))
+	r.Get("/urls/new", h.NewURLFormHandler())
+	r.Get("/{short}", h.UnshortURLHandler(urlInteractor))
+	r.Get("/{short}/info", h.GetShortURLInfo(urlInteractor))
 
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }

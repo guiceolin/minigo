@@ -8,9 +8,11 @@ import (
 	"github.com/guiceolin/minigo/interactors"
 )
 
-func (e Env) NewURLHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/new_url.html"))
-	tmpl.Execute(w, nil)
+func NewURLFormHandler() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("templates/new_url.html"))
+		tmpl.Execute(w, nil)
+	}
 }
 
 func UnshortURLHandler(i interactors.UrlInteractor) func(http.ResponseWriter, *http.Request) {
