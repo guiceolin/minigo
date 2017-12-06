@@ -19,3 +19,7 @@ func (p PostgresUrlRepository) Store(url models.Url) uint {
 	p.DB.Create(&url)
 	return url.ID
 }
+
+func (p PostgresUrlRepository) Update(url models.Url) {
+	p.DB.Save(&url)
+}

@@ -20,11 +20,16 @@ func (i UrlInteractor) CreateUrl(url string) string {
 	return bjf.Encode(idToEncode)
 }
 
-func (i UrlInteractor) FindShortURL(shortURL string) *models.Url {
+func (i UrlInteractor) FindShortURL(shortURL string) models.Url {
 	id := bjf.Decode(shortURL)
 	url, err := i.Repo.GetById(uint64(id))
 	if err != nil {
 		log.Fatal(err)
 	}
-	return url
+	return *url
+}
+
+func (i UrlInteractor) IncrementAccess(url models.Url) {
+	url.Count++
+	i.Repo.Update(url)
 }
