@@ -48,7 +48,7 @@ func main() {
 	r.Post("/urls", handlers.CreateUrlHandler(urlInteractor))
 	r.Get("/urls/new", env.NewURLHandler)
 	r.Get("/{short}", env.UnshortURLHandler)
-	r.Get("/{short}/info", env.ShortURLInfo)
+	r.Get("/{short}/info", handlers.GetShortURLInfo(urlInteractor))
 
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), r))
 }

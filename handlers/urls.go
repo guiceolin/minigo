@@ -29,11 +29,13 @@ func (e Env) UnshortURLHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url.Original, 302)
 }
 
-func (e Env) ShortURLInfo(w http.ResponseWriter, r *http.Request) {
-	url := e.findURL(chi.URLParam(r, "short"))
+func GetShortURLInfo(i interactors.UrlInteractor) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		url := i.FindShortURL(chi.URLParam(r, "short"))
 
-	tmpl := template.Must(template.ParseFiles("templates/url_info.html"))
-	tmpl.Execute(w, url)
+		tmpl := template.Must(template.ParseFiles("templates/url_info.html"))
+		tmpl.Execute(w, url)
+	}
 }
 
 func CreateUrlHandler(i interactors.UrlInteractor) func(http.ResponseWriter, *http.Request) {

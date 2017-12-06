@@ -1,6 +1,7 @@
 package interactors
 
 import (
+	"log"
 	"strconv"
 
 	"github.com/guiceolin/minigo/models"
@@ -17,4 +18,13 @@ func (i UrlInteractor) CreateUrl(url string) string {
 
 	var idToEncode = strconv.FormatUint(uint64(id), 10)
 	return bjf.Encode(idToEncode)
+}
+
+func (i UrlInteractor) FindShortURL(shortURL string) *models.Url {
+	id := bjf.Decode(shortURL)
+	url, err := i.Repo.GetById(uint64(id))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return url
 }
